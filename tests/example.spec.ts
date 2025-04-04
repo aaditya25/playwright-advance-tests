@@ -31,5 +31,5 @@ test('Check if product name, description and price displayed', async ({ page }) 
   await page.locator('[name="login-button"]').click();
   await expect(page.locator('.inventory_item').nth(0).locator('[data-test="inventory-item-name"]')).toHaveText('Sauce Labs Backpack');
   await expect(page.locator('.inventory_item').nth(0).locator('[data-test="inventory-item-desc"]')).toHaveText('carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.');
-  await expect(page.locator('.inventory_item').nth(0).locator('[data-test="inventory-item-price"]')).toHaveText('$29.99')
-});
+  await expect(page.locator('.inventory_item').nth(0).locator('[data-test="inventory-item-price"]')).toHaveText('$29.99');
+  });
