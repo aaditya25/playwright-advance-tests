@@ -1,0 +1,26 @@
+{
+    "title": {
+        "productsPage": "Products",
+        "cartPage": "Your Cart",
+        "userDetailsPage": "Checkout: Your Information",
+        "billDetailsPage": "Checkout: Overview",
+        "orderCompletePage": "Checkout: Complete!"
+    },
+    "expectedText": {
+        "itemsAddedToCart": "2",
+        "totalProductsListed": 6,
+        "swagLabs": "Swag Labs",
+        "itemPrice": "Item total: $29.99",
+        "taxApplied": "Tax: $2.40",
+        "totalPrice": "Total: $32.39",
+        "completionHeader": "Thank you for your order!",
+        "completionDesc": "Your order has been dispatched, and will arrive just as fast as the pony can get there!"
+        
+    },
+    "buttonAction": {
+        "checkout": "checkout",
+        "continue": "continue",
+        "finish": "finish",
+        "backToHomePage": "back-to-products"
+    }
+}

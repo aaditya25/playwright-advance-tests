@@ -1,9 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/loginPage';
 import { ProductPage } from '../pages/ProductPage';
-import { products } from '../data/products.json'
+import { products } from '../data/products.json';
+import { title, expectedText, buttonAction } from '../data/expectedTexts.json';
+import { userDetails} from '../data/userDetails.json';
+import { productIds} from '../data/productIds.json';
 import { ItemCheckoutPage } from '../pages/ItemCheckoutPage';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
 let loginPage: LoginPage
 let productPage: ProductPage
 let itemCheckoutPage: ItemCheckoutPage;
@@ -13,17 +18,17 @@ test.beforeEach(async ({ page }) => {
   productPage = new ProductPage(page);
   itemCheckoutPage = new ItemCheckoutPage(page)
   await loginPage.goto();
-  await loginPage.standardUserLogin('standard_user', 'secret_sauce')
+  await loginPage.standardUserLogin(process.env.USERNAME || '', process.env.PASSWORD || '')
 });
 
 
 test('Check if user is able to sign in into the Swag Labs', async ({ page }) => {
-  await expect(page.getByText('Swag Labs')).toBeVisible();
-  await expect(productPage.pageTitle).toHaveText('Products');
+  await expect(page.getByText(expectedText.swagLabs)).toBeVisible();
+  await expect(productPage.pageTitle).toHaveText(title.productsPage);
 });
 
 test('Check if all the products are listed', async ({ page }) => {
-  await expect(productPage.item).toHaveCount(6);
+  await expect(productPage.item).toHaveCount(expectedText.totalProductsListed);
 });
 
 test('Check if product name, description and price displayed on products page', async ({ page }) => {
@@ -43,13 +48,13 @@ test('Open product 2 and check if product name, description and price displayed'
 test('Verify product can be sorted using name', async ({ page }) => {
   const productNames = productPage.itemName
   //Sort by Name: Z to A
-  productPage.sortData('za');
+  productPage.sortData(products.sortingOption.ZToA);
   const namesZA = await productNames.allTextContents();
   const sortedZA = [...namesZA].sort().reverse();
   expect(namesZA).toEqual(sortedZA)
 
   //Sort by Name: A to Z
-  productPage.sortData('az');
+  productPage.sortData(products.sortingOption.AToZ);
   const namesAZ = await productNames.allTextContents();
   const sortedAZ = [...namesAZ].sort();
   expect(namesAZ).toEqual(sortedAZ)
@@ -59,14 +64,14 @@ test('Verify product can be sorted using name', async ({ page }) => {
 test('Verify product can be sorted using Price', async ({ page }) => {
   const productPrices = productPage.itemPrice
   //Sort by Name: price high to low
-  productPage.sortData('hilo');
+  productPage.sortData(products.sortingOption.HighToLow);
   const priceHighToLow = await productPrices.allTextContents();
   const priceHighToLowParsed = priceHighToLow.map(p => parseFloat(p.replace('$', '')))
   const sortedHighToLow = [...priceHighToLowParsed].sort((a, b) => b - a);
   expect(priceHighToLowParsed).toEqual(sortedHighToLow)
 
   //Sort by Name: price low to high
-  productPage.sortData('lohi');
+  productPage.sortData(products.sortingOption.LowToHigh);
   const priceLowToHigh = await productPrices.allTextContents();
   const priceLowToHighParsed = priceLowToHigh.map(p => parseFloat(p.replace('$', '')))
   const sortedLowToHigh = [...priceLowToHighParsed].sort((a, b) => a - b);
@@ -79,13 +84,13 @@ test('Verify if user can add items to cart and can also remove them', async ({ p
   await itemCheckoutPage.addBikeLightToCart.click();
   await expect(itemCheckoutPage.removeBackpackFromCart).toBeVisible();
   await expect(itemCheckoutPage.removeBikeLightFromCart).toBeVisible();
-  await expect(productPage.cartBadge).toHaveText('2');
+  await expect(productPage.cartBadge).toHaveText(expectedText.itemsAddedToCart);
   await productPage.cartButton.click();
-  await expect(productPage.pageTitle).toHaveText('Your Cart');
-  await expect(itemCheckoutPage.getItemNameFromCartList('#item_0_title_link')).toHaveText(products.productName.bikeLight);
-  await expect(itemCheckoutPage.getItemNameFromCartList('#item_4_title_link')).toHaveText(products.productName.backpack);
+  await expect(productPage.pageTitle).toHaveText(title.cartPage);
+  await expect(itemCheckoutPage.getItemNameFromCartList(productIds.item0)).toHaveText(products.productName.bikeLight);
+  await expect(itemCheckoutPage.getItemNameFromCartList(productIds.item4)).toHaveText(products.productName.backpack);
   await itemCheckoutPage.removeBikeLightFromCart.click();
-  await expect(itemCheckoutPage.getItemNameFromCartList('#item_0_title_link')).not.toBeVisible();
+  await expect(itemCheckoutPage.getItemNameFromCartList(productIds.item0)).not.toBeVisible();
 });
 
 
@@ -97,7 +102,6 @@ test('Check if user can order the Item', async ({ page }) => {
   await itemCheckoutPage.enterUserDetails('firstName','adi');
   await itemCheckoutPage.enterUserDetails('lastName','chaudhari');
   await itemCheckoutPage.enterUserDetails('postalCode','411021');
-
   await itemCheckoutPage.buttonAction('continue');
   await expect(productPage.pageTitle).toHaveText('Checkout: Overview');
   await expect(itemCheckoutPage.subtotal).toHaveText('Item total: $29.99');

@@ -1,0 +1,9 @@
+{
+  "productIds": {
+    "firstName": "firstName",
+    "lastName": "lastName",
+    "postalCode": "postalCode",
+    "item0": "#item_0_title_link",
+    "item4": "#item_4_title_link"
+  }
+}
