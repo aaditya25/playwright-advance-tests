@@ -14,6 +14,12 @@
       "productBackpackPrice": "$29.99",
       "productBikeLightPrice": "$9.99",
       "productBoltTshirtPrice": "$15.99"
+    },
+    "sortingOption": {
+      "AToZ": "az",
+      "ZToA": "za",
+      "HighToLow": "hilo",
+      "LowToHigh": "lohi"
     }
   }
 }
