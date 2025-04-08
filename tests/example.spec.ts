@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/loginPage';
+//POM
+import { LoginPage } from '../pages/LoginPage';
 import { ProductPage } from '../pages/ProductPage';
+import { ItemCheckoutPage } from '../pages/ItemCheckoutPage';
+//Data Files
 import { products } from '../data/products.json';
 import { title, expectedText, buttonAction } from '../data/expectedTexts.json';
 import { userDetails} from '../data/userDetails.json';
 import { productIds} from '../data/productIds.json';
-import { ItemCheckoutPage } from '../pages/ItemCheckoutPage';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,7 +22,6 @@ test.beforeEach(async ({ page }) => {
   await loginPage.goto();
   await loginPage.standardUserLogin(process.env.USERNAME || '', process.env.PASSWORD || '')
 });
-
 
 test('Check if user is able to sign in into the Swag Labs', async ({ page }) => {
   await expect(page.getByText(expectedText.swagLabs)).toBeVisible();
@@ -44,7 +45,6 @@ test('Open product 2 and check if product name, description and price displayed'
   await expect(productPage.itemPrice).toHaveText(products.productPrices.productBikeLightPrice)
 });
 
-
 test('Verify product can be sorted using name', async ({ page }) => {
   const productNames = productPage.itemName
   //Sort by Name: Z to A
@@ -59,7 +59,6 @@ test('Verify product can be sorted using name', async ({ page }) => {
   const sortedAZ = [...namesAZ].sort();
   expect(namesAZ).toEqual(sortedAZ)
 });
-
 
 test('Verify product can be sorted using Price', async ({ page }) => {
   const productPrices = productPage.itemPrice
