@@ -97,21 +97,20 @@ test('Verify if user can add items to cart and can also remove them', async ({ p
 test('Check if user can order the Item', async ({ page }) => {
   await itemCheckoutPage.addBackpackToCart.click();
   await productPage.cartButton.click();
-  await itemCheckoutPage.buttonAction(buttonAction.checkout);
-  await expect(productPage.pageTitle).toHaveText(title.userDetailsPage);
-  await itemCheckoutPage.enterUserDetails(productIds.firstName,userDetails.firstName);
-  await itemCheckoutPage.enterUserDetails(productIds.lastName,userDetails.lastName);
-  await itemCheckoutPage.enterUserDetails(productIds.postalCode,userDetails.postalCode);
-
-  await itemCheckoutPage.buttonAction(buttonAction.continue);
-  await expect(productPage.pageTitle).toHaveText(title.billDetailsPage);
-  await expect(itemCheckoutPage.subtotal).toHaveText(expectedText.itemPrice);
-  await expect(itemCheckoutPage.taxImplicable).toHaveText(expectedText.taxApplied);
-  await expect(itemCheckoutPage.totalPrice).toHaveText(expectedText.totalPrice);
-  await itemCheckoutPage.buttonAction(buttonAction.finish);
-  await expect(productPage.pageTitle).toHaveText(title.orderCompletePage);
-  await expect(itemCheckoutPage.orderCompletionHeader).toHaveText(expectedText.completionHeader);
-  await expect(itemCheckoutPage.orderCompletionDesc).toHaveText(expectedText.completionDesc);
-  await itemCheckoutPage.buttonAction(buttonAction.backToHomePage);
-  await expect(productPage.pageTitle).toHaveText(title.productsPage);
+  await itemCheckoutPage.buttonAction('checkout');
+  await expect(productPage.pageTitle).toHaveText('Checkout: Your Information');
+  await itemCheckoutPage.enterUserDetails('firstName','adi');
+  await itemCheckoutPage.enterUserDetails('lastName','chaudhari');
+  await itemCheckoutPage.enterUserDetails('postalCode','411021');
+  await itemCheckoutPage.buttonAction('continue');
+  await expect(productPage.pageTitle).toHaveText('Checkout: Overview');
+  await expect(itemCheckoutPage.subtotal).toHaveText('Item total: $29.99');
+  await expect(itemCheckoutPage.taxImplicable).toHaveText('Tax: $2.40');
+  await expect(itemCheckoutPage.totalPrice).toHaveText('Total: $32.39');
+  await itemCheckoutPage.buttonAction('finish');
+  await expect(productPage.pageTitle).toHaveText('Checkout: Complete!');
+  await expect(itemCheckoutPage.orderCompletionHeader).toHaveText('Thank you for your order!');
+  await expect(itemCheckoutPage.orderCompletionDesc).toHaveText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
+  await itemCheckoutPage.buttonAction('back-to-products');
+  await expect(productPage.pageTitle).toHaveText('Products');
 });
